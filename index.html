@@ -1,0 +1,158 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>灾害信息查询下载系统</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">灾害数据</p>
+        <h1>灾害信息查询下载系统</h1>
+      </div>
+      <div class="dataset-status">
+        <span>真实数据</span>
+        <strong id="totalRecords">0 条</strong>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="query-panel" aria-labelledby="query-title">
+        <div class="section-heading">
+          <h2 id="query-title">组合查询</h2>
+          <button class="ghost-button" id="resetButton" type="button">重置</button>
+        </div>
+
+        <form class="query-form" id="queryForm">
+          <label>
+            <span>数据来源</span>
+            <select id="sourceName" name="sourceName">
+              <option value="">全部来源</option>
+            </select>
+          </label>
+
+          <label>
+            <span>灾害类型</span>
+            <select id="disasterType" name="disasterType">
+              <option value="">全部类型</option>
+              <option value="自然灾害">自然灾害</option>
+              <option value="地震">地震</option>
+              <option value="洪涝">洪涝</option>
+              <option value="地质灾害">地质灾害</option>
+            </select>
+          </label>
+
+          <label>
+            <span>开始日期</span>
+            <input id="startDate" name="startDate" type="date" />
+          </label>
+
+          <label>
+            <span>结束日期</span>
+            <input id="endDate" name="endDate" type="date" />
+          </label>
+
+          <label>
+            <span>发生地点</span>
+            <input id="locationKeyword" name="locationKeyword" type="search" placeholder="省、市、县关键词" />
+          </label>
+
+          <label>
+            <span>最小受灾人口</span>
+            <input id="minAffected" name="minAffected" type="number" min="0" step="1" placeholder="例如 10000" />
+          </label>
+
+          <label>
+            <span>最小经济损失</span>
+            <input id="minLoss" name="minLoss" type="number" min="0" step="10000" placeholder="单位：元" />
+          </label>
+
+          <label class="wide-field">
+            <span>灾情描述</span>
+            <input id="descriptionKeyword" name="descriptionKeyword" type="search" placeholder="道路中断、房屋受损等关键词" />
+          </label>
+
+          <div class="form-actions">
+            <button class="primary-button" type="submit">查询</button>
+            <button class="ghost-button" id="refreshButton" type="button">刷新数据</button>
+            <button class="secondary-button" id="downloadButton" type="button">下载表格</button>
+          </div>
+        </form>
+
+        <div class="source-status" id="sourceStatus" role="status">正在加载真实数据...</div>
+      </section>
+
+      <section class="summary-grid" aria-label="查询结果统计">
+        <article>
+          <span>结果数量</span>
+          <strong id="resultCount">0</strong>
+        </article>
+        <article>
+          <span>受灾人口</span>
+          <strong id="affectedTotal">0</strong>
+        </article>
+        <article>
+          <span>死亡失踪</span>
+          <strong id="deathsTotal">0</strong>
+        </article>
+        <article>
+          <span>紧急转移/救助</span>
+          <strong id="relocatedTotal">0</strong>
+        </article>
+        <article>
+          <span>倒塌房屋</span>
+          <strong id="houseTotal">0</strong>
+        </article>
+        <article>
+          <span>直接经济损失</span>
+          <strong id="lossTotal">0</strong>
+        </article>
+      </section>
+
+      <section class="table-panel" aria-labelledby="table-title">
+        <div class="section-heading">
+          <h2 id="table-title">灾害信息列表</h2>
+          <span id="filterState">全部记录</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>灾害类型</th>
+                <th>发生时间</th>
+                <th>发生地点</th>
+                <th>受灾人口</th>
+                <th>死亡失踪</th>
+                <th>紧急转移/救助</th>
+                <th>倒塌房屋</th>
+                <th>农作物受灾面积</th>
+                <th>直接经济损失</th>
+                <th>灾情描述</th>
+                <th>数据来源</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+
+        <p class="empty-state" id="emptyState" hidden>没有匹配的灾害记录。</p>
+      </section>
+    </main>
+
+    <div class="dialog-backdrop" id="descriptionDialog" hidden>
+      <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+        <div class="dialog-head">
+          <h2 id="dialogTitle">灾情描述</h2>
+          <button class="dialog-close" id="dialogCloseButton" type="button" aria-label="关闭">关闭</button>
+        </div>
+        <p class="dialog-meta" id="dialogMeta"></p>
+        <div class="dialog-body" id="dialogText"></div>
+      </section>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
